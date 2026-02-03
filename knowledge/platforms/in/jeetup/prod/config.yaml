@@ -6,17 +6,26 @@ datasources:
     user: "${DB_USER}"
 notifications:
   default_channels: ["lark_ops_group"]
+  channels:
+    marketing_recon_channel:
+      type: "lark_webhook"
+      url: "${LARK_WEBHOOK_MARKETING_RECONCILIATION}"
+  business_domains:
+    marketing.acquisition.reconciliation: ["marketing_recon_channel"]
 
 domain:
   marketing:
     acquisition:
       reconciliation:
-        # Aggregated Summary Report (Target)
-        summary_sheet_url: "https://docs.google.com/spreadsheets/d/example_summary_sheet_id/edit"
+        output_dir: "marketing/acquisition"
         agencies:
           ADC:
-            channels:
-              FB:
-                # Agency Source Report (Source)
-                source_sheet_url: "https://docs.google.com/spreadsheets/d/example_source_sheet_id/edit"
-                template_type: "standard_v1"
+            template_type: "adc_v1"
+            # jeetup&adc 投放7+1%
+            source_sheet_url: "https://docs.google.com/spreadsheets/d/1YtsblH_pPjaCb6NsdyrnSJI4NACJZPu01r3VkLla8Yw/edit?gid=2139486573#gid=2139486573"
+            sheet_tab_name: "消耗报表"
+          UD:
+            template_type: "ud_v1"
+            # UD&Jeetup 印度代投8+1
+            source_sheet_url: "https://docs.google.com/spreadsheets/d/1HtUu__72izsGlMrw4Y2ZT11MPw5-N8WO-6EhoUdDjEU/edit?usp=sharing"
+            sheet_tab_name: "消耗报表"
