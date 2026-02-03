@@ -1,0 +1,11 @@
+# XP786 (Pakistan)
+# Platform: WG
+
+app_name: "xp786"
+domain: "operations"
+
+admin_panel:
+  # WG Backend URL (Updated by User)
+  url: "https://admin.example.com"
+  type: "wg" 
+  headless: false

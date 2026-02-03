@@ -1,0 +1,30 @@
+# Kiwi Scheduler Registry
+# This file is managed by AI to schedule operational tasks.
+# DO NOT EDIT MANUALLY unless you know what you are doing.
+
+jobs:
+  # Example: Daily PnL Report
+  # daily_pnl:
+  #   cron: "0 2 * * *"  # 2 AM daily
+  #   script: "domain/finance/accounting/daily_pnl.py"
+  #   description: "Calculate and report Daily PnL for JeetUp"
+  #   matrix:
+  #     apps: ["jeetup"]
+  #     envs: ["prod"]
+  # Sync Knowledge Base (Reverse-Sync from DB)
+  knowledge_sync:
+    cron: "0 4 * * *" # 4 AM Daily
+    script: "system/knowledge_syncer.py"
+    matrix:
+      apps: ["jeetup"]
+      envs: ["prod"]
+  # Intraday Payment Insight (Hourly)
+  intraday_payment_insight:
+    cron: "0 * * * *" # Hourly
+    script: "domain/risk/payment/payment_insight.py"
+    params:
+      period: "today"
+    matrix:
+      apps: ["falcowin", "kanzplay"]
+      envs: ["prod"]
+

@@ -1,0 +1,14 @@
+# Virtual App for Global Operations
+# Used for: Telegram Scraping, Market Research, Competitor Monitoring
+# Region: Global
+
+app_name: "global_ops"
+domain: "operations"
+
+# Features Enabled
+features:
+  telegram_monitoring: true
+  asset_archiving: true
+
+# Custom Paths (Optional override)
+# output_dir: "data/outputs/global/ops"

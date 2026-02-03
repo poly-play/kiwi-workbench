@@ -1,0 +1,25 @@
+# Kiwi Script Library
+# This file is automatically updated by the Scaffolder.
+# It serves as a catalog for Agents to discover available tools.
+
+scripts:
+  - name: generic_reporter
+    domain: system
+    sub_domain: reporting
+    description: "Universal SQL Reporter for Zero-Code alerts."
+    path: engine/scripts/system/generic_reporter.py
+  - name: knowledge_syncer
+    domain: system
+    sub_domain: knowledge
+    description: "Syncs remote config state to local knowledge base."
+    path: engine/scripts/system/knowledge_syncer.py
+  - name: asset_manager
+    domain: system
+    sub_domain: assets
+    description: "Unified Asset Hub (Ingest/Upload) with Multi-Tenancy."
+    path: engine/scripts/system/asset_manager.py
+  - name: payment_insight
+    domain: risk
+    sub_domain: payment
+    description: "Daily & Intraday Payment Success Rate Analysis (AI-Powered)."
+    path: engine/scripts/domain/risk/payment/payment_insight.py

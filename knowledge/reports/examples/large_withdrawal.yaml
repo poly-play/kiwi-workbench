@@ -1,0 +1,20 @@
+title: "High Value Withdrawals Monitor"
+domain: "risk"
+sub_domain: "payment"
+
+# Data Source (defined in config.yaml)
+source: "warehouse"
+
+# SQL to Run
+sql: |
+  SELECT user_id, amount, status 
+  FROM withdrawals 
+  WHERE amount > 10000 
+  AND status = 'pending'
+  AND created_at > NOW() - INTERVAL 1 HOUR
+
+# Python expression to check if we should alert
+trigger_rule: "len(df) > 0"
+
+# Notification Message
+message: "🚨 Found {count} large withdrawals pending review!"

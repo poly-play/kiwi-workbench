@@ -1,0 +1,35 @@
+from engine.scripts.core.base_script import BaseScript
+import pandas as pd
+
+class {{ClassName}}(BaseScript):
+    DOMAIN = "{{domain}}"
+    SUB_DOMAIN = "{{sub_domain}}"
+    JOB_NAME = "{{job_name}}"
+    
+    """
+    {{description}}
+    """
+
+    def add_arguments(self, parser):
+        # Add custom arguments here
+        # parser.add_argument("--my_arg", help="Example argument")
+        pass
+
+    def run(self):
+        # 1. Get Connectors
+        # db = self.get_connector("warehouse")
+        
+        # 2. Logic
+        if self.dry_run:
+            self.logger.info("[DRY RUN] Would execute critical logic...")
+            return {"status": "dry_run"}
+
+        print(f"Running {self.JOB_NAME} for {self.args.app}...")
+        
+        # 3. Output
+        # df.to_csv(self.out.get_path("result.csv"))
+        
+        return {"status": "success", "processed_rows": 0}
+
+if __name__ == "__main__":
+    {{ClassName}}().execute()

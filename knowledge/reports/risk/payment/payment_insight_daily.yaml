@@ -1,0 +1,51 @@
+# Payment Insight Configuration
+# Includes SQL Queries and Output Strategy
+
+output:
+  type: google_sheet
+  # Naming pattern for the spreadsheet (will create new if not exists)
+  # Dynamic vars: {app_name}, {year}, {month}
+  sheet_name: "Payment Insight {app_name} - {year}-{month}"
+  
+  # Worksheet (Tab) name
+  # Dynamic vars: {date}
+  tab_name: "Daily Data"
+  
+  # Target audience references 'delivery' in App Config
+  # e.g. config.yaml -> delivery.google_drive.share_with
+  share_with_ref: "google_drive"
+
+queries:
+  # Query 1: Yesterday's Performance (T-1)
+  # Query 1: Yesterday's Performance (T-1)
+  yesterday_stats: |
+    SELECT 
+      DATE(created_time) as dt,
+      recharge_channel,      -- Raw Channel ID for Python processing
+      upstream_channel,      -- Raw Sub-Channel Name
+      pay_method,
+      COUNT(*) as total_orders,
+      SUM(CASE WHEN order_status = 1 THEN 1 ELSE 0 END) as success_count,
+      ROUND(AVG(CASE WHEN order_status = 1 THEN completed_time - created_time ELSE NULL END), 1) as avg_latency_sec
+    FROM gene.gene_t_recharge_order
+    WHERE 
+      app_id = {{app_id}}
+      AND created_time >= '{{start_time}}' 
+      AND created_time < '{{end_time}}'
+    GROUP BY dt, recharge_channel, upstream_channel, pay_method
+    ORDER BY total_orders DESC
+
+  # Query 2: Baseline Performance (Last 7 Days)
+  baseline_stats: |
+    SELECT 
+      recharge_channel,
+      upstream_channel,
+      pay_method,
+      COUNT(*) as total_orders_7d,
+      SUM(CASE WHEN order_status = 1 THEN 1 ELSE 0 END) as success_count_7d
+    FROM gene.gene_t_recharge_order
+    WHERE 
+      app_id = {{app_id}}
+      AND created_time >= '{{baseline_start}}' 
+      AND created_time < '{{start_time}}' -- Up to yesterday
+    GROUP BY recharge_channel, upstream_channel, pay_method

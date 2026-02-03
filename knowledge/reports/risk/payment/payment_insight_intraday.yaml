@@ -1,0 +1,42 @@
+# Payment Insight Intraday Configuration
+# Focus: Real-time monitoring (Today vs Yesterday Same-Time)
+
+output:
+  type: google_sheet
+  sheet_name: "Payment Insight {app_name} - {year}-{month} (Intraday)"
+  tab_name: "Intraday Data"
+  share_with_ref: "google_drive"
+
+queries:
+  # Query 1: Today's Performance (00:00 to NOW)
+  today_stats: |
+    SELECT 
+      DATE(created_time) as dt,
+      recharge_channel,      
+      upstream_channel,      
+      pay_method,
+      COUNT(*) as total_orders,
+      SUM(CASE WHEN order_status = 1 THEN 1 ELSE 0 END) as success_count,
+      ROUND(AVG(CASE WHEN order_status = 1 THEN completed_time - created_time ELSE NULL END), 1) as avg_latency_sec
+    FROM gene.gene_t_recharge_order
+    WHERE 
+      app_id = {{app_id}}
+      AND created_time >= '{{today_start}}' 
+      AND created_time < '{{current_time}}'
+    GROUP BY dt, recharge_channel, upstream_channel, pay_method
+    ORDER BY total_orders DESC
+
+  # Query 2: Yesterday Same-Time Performance (00:00 to Yesterday NOW)
+  yesterday_same_time_stats: |
+    SELECT 
+      recharge_channel,
+      upstream_channel,
+      pay_method,
+      COUNT(*) as total_orders_yesterday,
+      SUM(CASE WHEN order_status = 1 THEN 1 ELSE 0 END) as success_count_yesterday
+    FROM gene.gene_t_recharge_order
+    WHERE 
+      app_id = {{app_id}}
+      AND created_time >= '{{yesterday_start}}' 
+      AND created_time < '{{yesterday_same_time}}'
+    GROUP BY recharge_channel, upstream_channel, pay_method

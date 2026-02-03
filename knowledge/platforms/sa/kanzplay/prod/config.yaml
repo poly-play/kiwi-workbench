@@ -1,0 +1,22 @@
+datasources:
+  app_id: 1003
+  doris:
+    type: mysql
+    host: ${DB_HOST}
+    port: ${DB_PORT}
+    user: bi_readonly
+    password: ${DORIS_PASSWORD}
+    database: gene
+timezone: Asia/Riyadh
+
+delivery:
+  google_drive:
+    # Shared Folder: "Kiwi Reports"
+    folder_id: "${GOOGLE_DRIVE_FOLDER_ID}"
+    share_with:
+      - "user@example.com"
+      - "finance@example.com"
+
+admin_panel:
+  url: "https://admin.example.com/login"
+  headless: true

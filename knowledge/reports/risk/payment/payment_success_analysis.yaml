@@ -1,0 +1,75 @@
+title: "Payment Success Analysis (AE Falcowin)"
+domain: finance
+sub_domain: payment
+job_name: payment_success_analysis
+source: doris
+
+# Default Trigger: Always report (can be set to 'len(df) > 0')
+trigger_rule: "len(df) > 0"
+
+message: |
+  📊 **支付成功率分析报表**
+  Time Range: {start_time} to {end_time}
+  Total Orders: {result_count} rows
+
+# Optimized SQL with Date & App placeholders
+sql: |
+  /* 
+    Payment Analysis Report 
+    App: {{app_id}}
+    Range: {{start_time}} ~ {{end_time}}
+  */
+  SELECT 
+      date(created_time) as dt,
+      
+      -- Normalized Route Name
+      CASE 
+          WHEN recharge_channel = 7 THEN 'OnePay' 
+          ELSE 'Direct' 
+      END as route,
+  
+      -- Normalized Sub-Channel Logic
+      CASE 
+          WHEN recharge_channel = 7 THEN 
+              CASE 
+                  WHEN upstream_channel LIKE 'PlusPay%' THEN 'PlusPay'
+                  WHEN upstream_channel LIKE 'Buzi%' THEN upstream_channel
+                  WHEN upstream_channel = 'NoWallet' THEN 'NoWallet'
+                  ELSE upstream_channel
+              END
+          ELSE 
+              CASE recharge_channel
+                  WHEN 10 THEN 'PlusPay'
+                  WHEN 11 THEN 'BuziPay_AED'
+                  WHEN 19 THEN 'BuziPay_AED2'
+                  WHEN 22 THEN 'BuziPay_USD'
+                  WHEN 16 THEN 'NoWallet'
+                  WHEN 0 THEN 'TPay'
+                  WHEN 6 THEN 'TtPay_AED'
+                  WHEN 3 THEN 'MePay_AED'
+                  ELSE 'Other'
+              END
+      END as sub_channel,
+      
+      -- Core Metrics
+      COUNT(*) as total_orders,
+      SUM(IF(order_status = 1, 1, 0)) as success_count,
+      SUM(IF(order_status = 0, 1, 0)) as pending_count,
+      SUM(IF(order_status = 2, 1, 0)) as failed_count,
+      
+      -- Rates & Performance
+      ROUND(SUM(IF(order_status = 1, 1, 0)) * 100.0 / COUNT(*), 2) as success_rate_pct,
+      ROUND(AVG(IF(order_status = 1, TIMESTAMPDIFF(SECOND, created_time, completed_time), NULL)), 1) as avg_latency_sec
+  
+  FROM gene.gene_t_recharge_order
+  WHERE app_id = {{app_id}}
+    AND country IN ('SA','AE','QA','KW','OM','BH')
+    AND created_time >= '{{start_time}}' 
+    AND created_time < '{{end_time}}'
+    AND is_deleted = 0
+  
+  GROUP BY 
+      dt, route, sub_channel
+      
+  ORDER BY 
+      dt DESC, success_rate_pct DESC

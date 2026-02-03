@@ -1,0 +1,34 @@
+currency: USD
+timezone: UTC
+timeout: 30
+compliance:
+    kyc_required: false
+
+google_drive:
+  payment_risk_folder_id: "10hgODTfDD4LWQApbqr1-88RZEdmZuuHn"
+
+notifications:
+  channels:
+    global_payment_group:
+      type: lark_webhook
+      url: ${LARK_WEBHOOK_PAYMENT_GLOBAL}
+    global_finance_group:
+      type: lark_webhook
+      url: ${LARK_WEBHOOK_FINANCE_GLOBAL}
+    risk_payment_ops:
+      type: lark_webhook
+      url: ${LARK_WEBHOOK_PAYMENT_RISK}
+    marketing_reconciliation_group:
+      type: lark_webhook
+      url: "https://open.larksuite.com/open-apis/bot/v2/hook/cc3b6563-f6a0-4372-8d2e-85627f9905bb"
+  
+  business_domains:
+    # Risk Domain
+    risk.payment: [risk_payment_ops]
+    
+    # Fallback: Other finance domains (treasury, tax) go only to Finance Group
+    # Fallback: Other finance domains (treasury, tax) go only to Finance Group
+    finance: [global_finance_group]
+    
+    # Marketing Domain
+    marketing.acquisition: [marketing_reconciliation_group]

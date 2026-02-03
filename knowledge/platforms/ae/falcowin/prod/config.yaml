@@ -1,0 +1,31 @@
+datasources:
+  app_id: 1004
+  doris:
+    type: mysql
+    host: 192.168.31.76
+    port: 38131
+    user: bi_readonly
+    password: ${DORIS_PASSWORD}
+    database: gene
+timezone: Asia/Dubai
+
+notifications:
+  channels:
+    falcowin_ops:
+      type: lark_webhook
+      url: ${LARK_WEBHOOK_OPS}
+  
+  business_domains:
+    # Route all 'operations' domain alerts to this channel
+    operations: [falcowin_ops]
+    # 'marketing', 'risk' etc. will fallback to default or fail silently if not defined
+
+delivery:
+  google_drive:
+    # Shared Folder: "Kiwi Reports"
+    folder_id: "${GOOGLE_DRIVE_FOLDER_ID}"
+    
+    # People who should receive Edit access
+    share_with:
+      - "user@example.com"
+      - "finance@example.com"

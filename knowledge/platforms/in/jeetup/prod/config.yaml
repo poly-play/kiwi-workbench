@@ -1,0 +1,22 @@
+env_name: "prod"
+datasources:
+  warehouse:
+    type: mysql
+    host: ${DB_HOST}
+    user: "${DB_USER}"
+notifications:
+  default_channels: ["lark_ops_group"]
+
+domain:
+  marketing:
+    acquisition:
+      reconciliation:
+        # Aggregated Summary Report (Target)
+        summary_sheet_url: "https://docs.google.com/spreadsheets/d/example_summary_sheet_id/edit"
+        agencies:
+          ADC:
+            channels:
+              FB:
+                # Agency Source Report (Source)
+                source_sheet_url: "https://docs.google.com/spreadsheets/d/example_source_sheet_id/edit"
+                template_type: "standard_v1"

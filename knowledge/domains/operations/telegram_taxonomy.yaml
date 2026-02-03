@@ -1,0 +1,42 @@
+# Telegram Account Taxonomy
+# Used to standardize account tags for automation routing.
+
+# 1. Primary Role (Functional Capability)
+# Can select multiple (e.g. monitor + archiver).
+roles:
+  - id: "sender"
+    description: "Active outreach, sending notifications, user interaction."
+  - id: "monitor"
+    description: "Passive listening, group joining, data scraping."
+  - id: "archiver"
+    description: "Bulk data downloader, asset backup."
+  - id: "admin"
+    description: "Group management, channel administration."
+
+# 2. Business Domain (Context)
+# Optional, can select multiple.
+domains:
+  - id: "marketing"
+  - id: "risk"
+  - id: "finance"
+  - id: "operations"
+
+# 3. Region Scope (Geography)
+# Optional, can select multiple.
+regions:
+  - id: "global"
+    description: "Cross-region or HQ operations."
+  - id: "br"
+    description: "Brazil (BR)."
+  - id: "in"
+    description: "India (IN)."
+  - id: "sa"
+    description: "Saudi Arabia (SA)."
+  - id: "ae"
+    description: "United Arab Emirates (AE)."
+  - id: "kw"
+    description: "Kuwait (KW)."
+  - id: "pk"
+    description: "Pakistan (PK)."
+  - id: "bd"
+    description: "Bangladesh (BD)."

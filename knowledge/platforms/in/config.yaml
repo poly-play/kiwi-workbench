@@ -1,0 +1,4 @@
+currency: INR
+timezone: "Asia/Kolkata"
+tax_rate: 0.28 # GST
+payment_methods: ["upi", "paytm", "phonepe"]
