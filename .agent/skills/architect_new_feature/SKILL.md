@@ -42,6 +42,13 @@ description: 按照 Kiwi 标准，通过"咨询-定义-架构-验证"四步法�
     *   **模板**: `.agent/skills/architect_new_feature/resources/technical_design_template.md`
     *   **输出**: `workspace/design_[feature_name].md`
     *   **关键检查点 (Must Validate against `README.md`)**: 
+        *   **Design Philosophy (Composition over Inheritance)**:
+            *   **Reuse First**: 优先复用现有的基础能力，避免重复造轮子。
+                *   **Client**: 网络请求层 (e.g. `GoogleSheetClient`, `LarkClient`).
+                *   **Driver**: 硬件/底层驱动 (e.g. `BrowserDriver`).
+                *   **Connector**: 数据连接器 (e.g. `MySQLConnector`, `BigQueryConnector`).
+                *   **Script**: 尽量通过 `import` 复用现有 `engine.scripts.utils` 中的逻辑。
+            *   **Combinator**: 新功能应视为现有组件的 **组合 (Composition)**，而非为了“继承”而强行抽象复杂的类层级。
         *   **Data Taxonomy**: 所有的写操作是否都落在了 `data/outputs` (Human) 或 `data/store` (Machine)?
         *   **Multi-Tenancy**: 是否遵循 `Region -> App` 的层级结构？
         *   是否有多租户隔离？
